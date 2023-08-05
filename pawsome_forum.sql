@@ -5,91 +5,102 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema pawsome_forum
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema pawsome_forum
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema pawsome_forum
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `pawsome_forum` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `pawsome_forum` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`users`
+-- Table `pawsome_forum`.`categories`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`users` (
+CREATE TABLE IF NOT EXISTS `pawsome_forum`.`categories` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(25) NULL,
-  `email` VARCHAR(255) NULL,
-  `password` VARCHAR(256) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
+  `category_name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`categories`
+-- Table `pawsome_forum`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`categories` (
+CREATE TABLE IF NOT EXISTS `pawsome_forum`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `category_name` VARCHAR(45) NULL,
+  `username` VARCHAR(15) NULL DEFAULT NULL,
+  `email` VARCHAR(255) NULL DEFAULT NULL,
+  `password` VARCHAR(256) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`subcategories`
+-- Table `pawsome_forum`.`subcategories`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`subcategories` (
+CREATE TABLE IF NOT EXISTS `pawsome_forum`.`subcategories` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `subcat_name` VARCHAR(45) NULL,
+  `subcat_name` VARCHAR(45) NULL DEFAULT NULL,
   `categories_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_subcategories_categories1_idx` (`categories_id` ASC) VISIBLE,
-  CONSTRAINT `fk_subcategories_categories1`
+  INDEX `fk_subcategories_categories_idx` (`categories_id` ASC) VISIBLE,
+  CONSTRAINT `fk_subcategories_categories`
     FOREIGN KEY (`categories_id`)
-    REFERENCES `mydb`.`categories` (`id`)
+    REFERENCES `pawsome_forum`.`categories` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`posts`
+-- Table `pawsome_forum`.`posts`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`posts` (
+CREATE TABLE IF NOT EXISTS `pawsome_forum`.`posts` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(255) NULL,
-  `body` VARCHAR(8000) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
-  `users_id` INT NOT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `body` VARCHAR(8000) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `subcategories_id` INT NOT NULL,
+  `users_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_posts_users_idx` (`users_id` ASC) VISIBLE,
   INDEX `fk_posts_subcategories1_idx` (`subcategories_id` ASC) VISIBLE,
-  CONSTRAINT `fk_posts_users`
-    FOREIGN KEY (`users_id`)
-    REFERENCES `mydb`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_posts_users1_idx` (`users_id` ASC) VISIBLE,
   CONSTRAINT `fk_posts_subcategories1`
     FOREIGN KEY (`subcategories_id`)
-    REFERENCES `mydb`.`subcategories` (`id`)
+    REFERENCES `pawsome_forum`.`subcategories` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_posts_users1`
+    FOREIGN KEY (`users_id`)
+    REFERENCES `pawsome_forum`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`comments`
+-- Table `pawsome_forum`.`comments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
+CREATE TABLE IF NOT EXISTS `pawsome_forum`.`comments` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `content` VARCHAR(8000) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
+  `content` VARCHAR(8000) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `updated_at` DATETIME NULL DEFAULT NULL,
   `users_id` INT NOT NULL,
   `posts_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -97,15 +108,17 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
   INDEX `fk_comments_posts1_idx` (`posts_id` ASC) VISIBLE,
   CONSTRAINT `fk_comments_users1`
     FOREIGN KEY (`users_id`)
-    REFERENCES `mydb`.`users` (`id`)
+    REFERENCES `pawsome_forum`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_comments_posts1`
     FOREIGN KEY (`posts_id`)
-    REFERENCES `mydb`.`posts` (`id`)
+    REFERENCES `pawsome_forum`.`posts` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

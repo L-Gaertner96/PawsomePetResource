@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subcategories</title>
+</head>
+<body>
+    <h1>Subcategories for {{ category.category_name }}</h1>
+    {% if subcategories %}
+        <ul>
+            {% for subcategory in subcategories %}
+                <li>{{ subcategory.subcat_name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No subcategories found for this category.</p>
+    {% endif %}
+</body>
+</html>

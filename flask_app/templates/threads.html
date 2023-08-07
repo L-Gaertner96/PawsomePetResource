@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ subcategory.subcat_name }} Threads</title>
+</head>
+<body>
+    <h1>{{ subcategory.subcat_name }} Threads</h1>
+    
+    <div class="threads-list">
+        {% if threads %}
+            <ul>
+                {% for thread in threads %}
+                    <li><a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/{{ thread.id }}">{{ thread.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No threads found in this subcategory.</p>
+        {% endif %}
+    </div>
+    
+    <a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/new_thread">Create New Thread</a>
+</body>
+</html>

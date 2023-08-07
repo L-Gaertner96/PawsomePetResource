@@ -29,6 +29,30 @@ class User:
         user_id = db.query_db(query, data)
         return user_id
     
+    @classmethod
+    def get_all_users(cls):
+        query = "SELECT * FROM users;"
+        results = connectToMySQL(cls.DB).query_db(query)
+        users = []
+        for user in results:
+            users.append(cls(user))
+        return users
+    
+    @classmethod
+    def get_one_by_id(cls, user_id):
+        query  = "SELECT * FROM users WHERE id = %(id)s";
+        data = {'id':user_id}
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        return cls(results[0])
+    
+    @classmethod
+    def get_one_by_email(cls,data):
+        query = "SELECT * FROM users WHERE email = %(email)s;"
+        result = connectToMySQL(cls.DB).query_db(query,data)
+        if len(result) < 1:
+            return None
+        return cls(result[0])
+    
     @staticmethod
     def new_user_validation(data):
         is_valid = True

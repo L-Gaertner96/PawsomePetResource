@@ -8,7 +8,7 @@ bcrypt = Bcrypt(app)
 def index():
     return render_template('index.html')
 
-@app.route('/create', methods=['POST'])
+@app.route('/newuser', methods=['POST'])
 def signup():
     is_valid = User.new_user_validation(request.form)
     if not is_valid:

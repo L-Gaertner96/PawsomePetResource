@@ -8,7 +8,7 @@
     {% if subcategories %}
         <ul>
             {% for subcategory in subcategories %}
-                <li>{{ subcategory.subcat_name }}</li>
+                <ul><a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}">{{ subcategory.subcat_name }}</a></ul>
             {% endfor %}
         </ul>
     {% else %}

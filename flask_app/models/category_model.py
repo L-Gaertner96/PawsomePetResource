@@ -20,6 +20,14 @@ class Category:
         data = {'category_name': category_name}
         result = connectToMySQL(cls.DB).query_db(query, data)
         return cls(**result[0]) if result else None
+    
+    @classmethod
+    def get_category_by_id(cls, category_id):
+        query = "SELECT id, category_name FROM categories WHERE id = %(category_id)s;"
+        data = {'category_id': category_id}
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        return cls(**result[0]) if result else None
+
 
     @classmethod
     def get_subcategories_by_category_id(cls, category_id):

@@ -20,26 +20,27 @@ def animal_pick(category):
     else:
         return "Category not found", 404
     
-@app.route('/<category>/<subcategory>')
-def subcategory_page(category, subcategory):
-    selected_category = Category.get_category_by_name(category)
-    
-    if selected_category:
-        subcategories = Category.get_subcategories_by_category_id(selected_category.id)
-        selected_subcategory = None
-        
-        # Find the selected subcategory object
-        for subcat in subcategories:
-            if subcat.subcat_name == subcategory:
-                selected_subcategory = subcat
-                break
-        
-        if selected_subcategory:
-            return render_template('threads.html', category=selected_category, subcategory=selected_subcategory)
-        else:
-            return "Subcategory not found", 404
+@app.route('/<category>/<subcategory>/', methods=['GET'])
+def view_subcategory(category, subcategory):
+    # Get category ID by category name
+    category_obj = Category.get_category_by_name(category)
+    if category_obj:
+        category_id = category_obj.id
     else:
-        return "Category not found", 404
+        flash("Category not found.", "error")
+        return redirect("/home")
+
+    # Get subcategory ID by category ID and subcategory name
+    subcategory_obj = Subcategory.get_subcat_by_name(category_id, subcategory)
+    if subcategory_obj:
+        subcategory_id = subcategory_obj.id
+    else:
+        flash("Subcategory not found.", "error")
+        return redirect("/home")
+
+    threads = Post.get_threads_by_subcategory(subcategory_id)
+    return render_template('threads.html', threads=threads, category=category_obj, subcategory=subcategory_obj)
+
     
 @app.route('/<category>/<subcategory>/new_thread', methods=['GET'])
 def new_post_form(category, subcategory):

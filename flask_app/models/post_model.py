@@ -24,7 +24,6 @@ class Post:
             WHERE categories.category_name = %(category)s AND subcategories.subcat_name = %(subcategory)s;
         """
         result = connectToMySQL(cls.DB).query_db(query, {'category': category, 'subcategory': subcategory})
-        print(result)
         
         if result:
             subcategory_id = result[0]['id']  # Access the first dictionary in the list and get the 'id' value
@@ -45,6 +44,19 @@ class Post:
             connectToMySQL(cls.DB).query_db(query, new_form_data)
         else:
             return redirect("/home")
+        
+    @classmethod
+    def get_threads_by_subcategory(cls, subcategories_id):
+        db = cls.DB
+        connection = connectToMySQL(db)
+        
+        query = "SELECT * FROM posts WHERE subcategories_id = %(subcategories_id)s;"
+        data = {'subcategories_id': subcategories_id}
+        
+        threads = connection.query_db(query, data)
+        
+        return threads
+
 
 
 

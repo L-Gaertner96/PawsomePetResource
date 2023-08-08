@@ -10,14 +10,18 @@ class Subcategory:
 
     @classmethod
     def get_subcat_id_by_name(cls, category_id, subcategory_name):
-        query = "SELECT id FROM subcategories WHERE categories_id = %(category_id)s AND name = %(subcategory_name)s;"
-        print(f"query => {query}")
+        query = "SELECT id FROM subcategories WHERE categories_id = %(category_id)s AND subcat_name = %(subcategory_name)s;"
         data = {'categories_id': category_id, 'subcat_name': subcategory_name}
         result = connectToMySQL(cls.DB).query_db(query, data)
-        print(f"subcat model data => {data}")
-        print(f"subcat_model => {result}")
         return result[0][''] if result else None
-
-    
     
 
+    @classmethod
+    def get_subcat_by_name(cls, category_id, subcategory_name):
+        query = "SELECT id, subcat_name FROM subcategories WHERE categories_id = %(category_id)s AND subcat_name = %(subcategory_name)s;"
+        data = {'category_id': category_id, 'subcategory_name': subcategory_name}
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        if result:
+            return cls(id=result[0]['id'], subcat_name=result[0]['subcat_name'])
+        else:
+            return None

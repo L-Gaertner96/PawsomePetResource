@@ -1,5 +1,5 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask import flash
+from flask import flash, session
 import re
 
 
@@ -52,6 +52,13 @@ class User:
         if len(result) < 1:
             return None
         return cls(result[0])
+    
+    # @classmethod
+    # def get_user_by_username(cls, username):
+    #     query = "SELECT id FROM users WHERE username = %(username)s;"
+    #     data = {'username': username}
+    #     result = connectToMySQL(cls.DB).query_db(query, data)
+    #     return result[0]['id'] if result else None
     
     @staticmethod
     def new_user_validation(data):

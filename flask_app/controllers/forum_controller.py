@@ -1,6 +1,9 @@
 from flask_app import app
 from flask import render_template, redirect, request, session, flash
-from flask_app.models.category_model import Category  # Import Category from the model module
+from flask_app.models.category_model import Category
+from flask_app.models.post_model import Post
+from flask_app.models.user_model import User
+from flask_app.models.subcat_model import Subcategory 
 
 @app.route('/home')
 def homepage():
@@ -37,3 +40,23 @@ def subcategory_page(category, subcategory):
             return "Subcategory not found", 404
     else:
         return "Category not found", 404
+    
+@app.route('/<category>/<subcategory>/new_thread', methods=['GET'])
+def new_post_form(category, subcategory):
+    return render_template('newpost.html', category=category, subcategory=subcategory)
+
+@app.route('/<category>/<subcategory>/create_post', methods=['POST'])
+def create_post(category, subcategory):
+    # Get the form data from the request
+    form_data = request.form
+
+    # Create a new post using the Post model
+    Post.create_new_post(form_data, category, subcategory)
+
+    # Redirect to the post list page
+    return redirect("/home")
+
+
+
+
+

@@ -1,4 +1,5 @@
 from flask_app import connectToMySQL
+from flask_app.models.subcat_model import Subcategory
 
 class Category:
     DB = 'pawsome_forum'  
@@ -27,7 +28,3 @@ class Category:
         results = connectToMySQL(cls.DB).query_db(query, data)
         return [Subcategory(**row) for row in results]
 
-class Subcategory:
-    def __init__(self, id, subcat_name):
-        self.id = id
-        self.subcat_name = subcat_name

@@ -63,7 +63,9 @@ def create_post(category, subcategory):
 def view_one(category, subcategory, post_id):
     post = Post.get_post_by_id(post_id)
     if post:
-        return render_template('viewthread.html', post=post, category=category, subcategory=subcategory)
+        comments = Comment.get_comments_by_post_id(post_id)  # Fetch comments associated with the post
+        print(comments)
+        return render_template('viewthread.html', post=post, comments=comments, category=category, subcategory=subcategory)
     else:
         flash("Post not found.", "error")
         return redirect("/home")
@@ -85,3 +87,24 @@ def create_comment(category, subcategory, post):
     flash("Comment added successfully.", "success")
     return redirect(url_for('view_one', category=category, subcategory=subcategory, post_id=post))
 
+@app.route('/<category>/<subcategory>/<int:post_id>/edit', methods=['GET', 'POST'])
+def edit_post(category, subcategory, post_id):
+    if request.method == 'POST':
+        form_data = {
+            'post_id': post_id,
+            'title': request.form['title'],
+            'body': request.form['body']
+        }
+        Post.update_post(form_data)
+        flash("Post updated successfully.", "success")
+        return redirect(url_for('view_one', category=category, subcategory=subcategory, post_id=post_id))
+    else:
+        post = Post.get_post_by_id(post_id)
+        return render_template('edit_post.html', post=post, category=category, subcategory=subcategory)
+
+# @app.route('/<category>/<subcategory>/<int:post_id>/delete', methods=['POST'])
+# def delete_post(category, subcategory, post_id):
+#     Comment.delete_comments_by_post_id(post_id)
+#     Post.delete_post(post_id)
+#     flash("Post deleted successfully.", "success")
+#     return redirect(url_for('view_subcategory', category=category, subcategory=subcategory))

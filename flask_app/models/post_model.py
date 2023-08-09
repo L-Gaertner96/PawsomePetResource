@@ -79,3 +79,18 @@ class Post:
             return post
         else:
             return None
+
+    @classmethod
+    def update_post(cls, form_data):
+        query = """
+            UPDATE posts
+            SET title = %(title)s, body = %(body)s
+            WHERE id = %(post_id)s
+        """
+        data = {
+            'title': form_data['title'],
+            'body': form_data['body'],
+            'post_id': form_data['post_id']
+        }
+        return connectToMySQL(cls.DB).query_db(query, data)
+    

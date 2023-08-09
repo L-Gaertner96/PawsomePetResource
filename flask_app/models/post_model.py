@@ -56,24 +56,20 @@ class Post:
         threads = connection.query_db(query, data)
         
         return threads
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # @classmethod
-    # def get_posts_by_thread_id(cls, thread_id):
-    #     query = "SELECT * FROM posts WHERE thread_id = %s;"
-    #     data = (thread_id,)
-    #     results = connectToMySQL(cls.DB).query_db(query, data)
-    #     return [cls(**row) for row in results]
+    
+    @classmethod
+    def get_post_by_id(cls, post_id):
+        query = "SELECT * FROM posts WHERE id = %(post_id)s;"
+        data = {'post_id': post_id}
+        result = connectToMySQL(cls.DB).query_db(query, data)
+        
+        if result:
+            post_data = result[0]  # Get the row data
+            post = cls(post_data['id'], post_data['subcategories_id'], {
+                'title': post_data['title'],
+                'body': post_data['body'],
+                'user_id': post_data['users_id']
+            })  # Initialize the Post object
+            return post
+        else:
+            return None

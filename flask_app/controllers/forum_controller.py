@@ -57,7 +57,12 @@ def create_post(category, subcategory):
     # Redirect to the post list page
     return redirect("/home")
 
-
-
-
-
+@app.route('/<category>/<subcategory>/<int:post_id>', methods=['GET'])
+def view_one(category, subcategory, post_id):
+    post = Post.get_post_by_id(post_id)
+    print(f" post info => {category} {subcategory} {post_id}")
+    if post:
+        return render_template('viewthread.html', post=post, category=category, subcategory=subcategory)
+    else:
+        flash("Post not found.", "error")
+        return redirect("/home")

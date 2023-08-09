@@ -9,9 +9,20 @@
     <h1>{{ post.title }}</h1>
     
     <p>{{ post.body }}</p>
+    
+    <p>Posted by: {{ post.username }}</p>
 
+    <h2>Comments:</h2>
+
+
+    <form method="post" action="/{{category}}/{{subcategory}}/{{post.id}}/new_comment">
+        
+        <label for="content">Post Body:</label>
+        <textarea id="content" name="content" rows="5" cols="40" required></textarea>
+        
+        <button type="submit">Submit</button>
+    </form>
     
     <a href="{{ url_for('view_subcategory', category=category, subcategory=subcategory) }}">Back to Subcategory</a>
-
 </body>
 </html>

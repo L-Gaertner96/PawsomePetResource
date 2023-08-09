@@ -59,17 +59,23 @@ class Post:
     
     @classmethod
     def get_post_by_id(cls, post_id):
-        query = "SELECT * FROM posts WHERE id = %(post_id)s;"
+        query = """
+            SELECT p.*, u.username
+            FROM posts p
+            JOIN users u ON p.users_id = u.id
+            WHERE p.id = %(post_id)s;
+        """
         data = {'post_id': post_id}
         result = connectToMySQL(cls.DB).query_db(query, data)
         
         if result:
-            post_data = result[0]  # Get the row data
+            post_data = result[0]
             post = cls(post_data['id'], post_data['subcategories_id'], {
                 'title': post_data['title'],
                 'body': post_data['body'],
                 'user_id': post_data['users_id']
-            })  # Initialize the Post object
+            })
+            post.username = post_data['username']  # Add username as an attribute
             return post
         else:
             return None

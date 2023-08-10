@@ -2,7 +2,6 @@ from flask_app import app
 from flask import render_template, redirect, request, session, flash, url_for
 from flask_app.models.category_model import Category
 from flask_app.models.post_model import Post
-from flask_app.models.user_model import User
 from flask_app.models.subcat_model import Subcategory 
 from flask_app.models.comment_model import Comment
 
@@ -31,7 +30,6 @@ def view_subcategory(category, subcategory):
         flash("Category not found.", "error")
         return redirect("/home")
 
-    # Get subcategory ID by category ID and subcategory name
     subcategory_obj = Subcategory.get_subcat_by_name(category_id, subcategory)
     if subcategory_obj:
         subcategory_id = subcategory_obj.id
@@ -56,11 +54,17 @@ def create_post(category, subcategory):
     if not user_id:
         return redirect('/')
     form_data = request.form
+    validation_errors = Post.validate_new_post(form_data['title'], form_data['body'])
+    if validation_errors:
+        for error in validation_errors:
+            flash(error, "error")
+        return redirect(url_for('new_post_form', category=category, subcategory=subcategory))
 
     Post.create_new_post(form_data, category, subcategory)
 
     return redirect("/home")
 
+    
 @app.route('/<category>/<subcategory>/<int:post_id>', methods=['GET'])
 def view_one(category, subcategory, post_id):
     user_id = session.get('user_id')
@@ -68,9 +72,13 @@ def view_one(category, subcategory, post_id):
         return redirect('/')
     post = Post.get_post_by_id(post_id)
     if post:
-        comments = Comment.get_comments_by_post_id(post_id)  # Fetch comments associated with the post
-        print(comments)
-        return render_template('viewthread.html', post=post, comments=comments, category=category, subcategory=subcategory)
+        comments = Comment.get_comments_by_post_id(post_id)
+        
+        is_owner = False
+        if user_id == post.users_id:
+            is_owner = True
+        
+        return render_template('viewthread.html', post=post, comments=comments, category=category, subcategory=subcategory, is_owner=is_owner)
     else:
         flash("Post not found.", "error")
         return redirect("/home")

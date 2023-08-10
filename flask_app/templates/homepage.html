@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Pawsome Pets!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Welcome to the Forum</h1>
-        <p>Explore the main categories:</p>
+    <div class="container">
+        <h1 class="mb-4">Welcome to the Pawsome Pets Forum!</h1>
+        <p>Choose your animal!</p>
         <div class="list-group">
             <a href="/dogs" class="list-group-item list-group-item-action">Dogs</a>
             <a href="/cats" class="list-group-item list-group-item-action">Cats</a>

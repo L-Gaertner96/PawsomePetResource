@@ -97,3 +97,14 @@ class Post:
         query = "DELETE FROM posts WHERE id = %(post_id)s;"
         data = {'post_id': post_id}
         connection.query_db(query, data)
+        
+    @staticmethod
+    def validate_new_post(title, body):
+        errors = []
+
+        if len(title) < 5:
+            errors.append("Title must be at least 5 characters long.")
+        if len(body) < 20:
+            errors.append("Post body must be at least 20 characters long.")
+
+        return errors

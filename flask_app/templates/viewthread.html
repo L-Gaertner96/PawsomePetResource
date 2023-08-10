@@ -12,11 +12,12 @@
     
     <p>Posted by: {{ post.username }}</p>
     
-    <a href="{{ url_for('edit_post', category=category, subcategory=subcategory, post_id=post.id) }}">Edit Post</a>
-    
-    <form method="post" action="{{ url_for('delete_post', category=category, subcategory=subcategory, post_id=post.id) }}">
-        <button type="submit">Delete Post</button>
-    </form>
+    {% if session.user_id == post.users_id %}
+        <a href="{{ url_for('edit_post', category=category, subcategory=subcategory, post_id=post.id) }}">Edit Post</a>
+        <form method="post" action="{{ url_for('delete_post', category=category, subcategory=subcategory, post_id=post.id) }}">
+            <button type="submit">Delete Post</button>
+        </form>
+    {% endif %}
     
     <h2>Comments:</h2>
     <ul>

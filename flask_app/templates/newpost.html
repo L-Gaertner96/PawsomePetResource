@@ -2,31 +2,47 @@
 <html>
 <head>
     <title>New Post</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
 </head>
 <body>
-    <h1>Create New Post</h1>
+    <div class="container mt-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/{{ category }}">{{ category.capitalize() }}</a></li>
+                <li class="breadcrumb-item"><a href="/{{ category }}/{{ subcategory }}">{{ subcategory.replace("_", " ").capitalize() }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create New Post</li>
+            </ol>
+        </nav>
+        
+        <h1>Create New Post</h1>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    
-    <form method="post" action="/{{ category }}/{{ subcategory }}/create_post">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
         
-        <label for="body">Post Body:</label>
-        <textarea id="body" name="body" rows="5" cols="40" required></textarea>
+        <form method="post" action="/{{ category }}/{{ subcategory }}/create_post" class="mt-4">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="body" class="form-label">Post Body:</label>
+                <textarea id="body" name="body" rows="5" cols="40" class="form-control" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
         
-        <button type="submit">Submit</button>
-    </form>
-    
-    <a href="/{{ category }}/{{ subcategory }}">Back to Subcategory</a>
+        <a href="/{{ category }}/{{ subcategory }}" class="btn btn-secondary mt-3">Back to Subcategory</a>
+    </div>
 </body>
 </html>
-

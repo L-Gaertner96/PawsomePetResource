@@ -2,25 +2,34 @@
 <html>
 <head>
     <title>All Threads for {{ subcategory.subcat_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
 </head>
 <body>
-    <h1>All Threads for {{ subcategory.subcat_name }}</h1>
-    <p>Category name: {{ category.category_name }}</p>
-    <p>Subcategory name: {{ subcategory.subcat_name }}</p>
-    
-    <div class="threads-list">
-        {% if threads %}
-            <ul>
-                {% for thread in threads %}
-                    <li><a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/{{ thread.id }}">{{ thread.title }}</a></li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No threads found in this subcategory.</p>
-        {% endif %}
+    <div class="container mt-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/{{ category.category_name }}">{{ category.category_name.capitalize() }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">All Threads for {{ subcategory.subcat_name.replace("_", " ").capitalize() }}</li>
+            </ol>
+        </nav>
+        <h1>All Threads for {{ subcategory.subcat_name.replace("_", " ").capitalize() }}</h1>
+        
+        <div class="threads-list">
+            {% if threads %}
+                <ul class="list-group">
+                    {% for thread in threads %}
+                        <li class="list-group-item"><a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/{{ thread.id }}">{{ thread.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No threads found in this subcategory.</p>
+            {% endif %}
+        </div>
+        
+        <a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/new_thread" class="btn btn-primary">Create New Thread</a>
+        <a href="/logout" class="btn btn-secondary">Log Out</a>
     </div>
-    
-    <a href="/{{ category.category_name }}/{{ subcategory.subcat_name }}/new_thread">Create New Thread</a>
-    <a href="/logout">Log Out</a>
 </body>
 </html>

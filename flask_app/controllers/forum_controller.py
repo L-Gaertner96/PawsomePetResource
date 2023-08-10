@@ -72,16 +72,9 @@ def view_one(category, subcategory, post_id):
     
 @app.route('/<category>/<subcategory>/<int:post>/new_comment', methods=['POST'])
 def create_comment(category, subcategory, post):
-    # Get the user ID from the session
-    print("Session contents:", session)
-    print("Session user_id:", session.get('user_id'))
-    # Make sure the user is logged in
-
-    # Get the comment body from the form data
     content = request.form.get('content')
     user_id = session.get('user_id')
 
-    # Create a new comment
     Comment.create_new_comment({'content': content, 'user_id': user_id}, post)
 
     flash("Comment added successfully.", "success")

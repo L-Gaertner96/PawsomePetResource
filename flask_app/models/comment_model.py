@@ -20,7 +20,7 @@ class Comment:
         print(f"data => {new_form_data}")
         query = """
             INSERT INTO comments (content, users_id, posts_id)
-            VALUES (%(content)s, %(users_id)s, %(post_id)s)
+            VALUES (%(content)s, %(user_id)s, %(post_id)s)
         """
         connectToMySQL(cls.DB).query_db(query, new_form_data)
 

@@ -35,3 +35,10 @@ class Comment:
         comments = connection.query_db(query, data)
         
         return comments
+    
+    @classmethod
+    def delete_comments_by_post_id(cls, post_id):
+        connection = connectToMySQL(cls.DB)
+        query = "DELETE FROM comments WHERE posts_id = %(post_id)s;"
+        data = {'post_id': post_id}
+        connection.query_db(query, data)

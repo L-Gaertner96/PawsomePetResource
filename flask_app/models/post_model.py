@@ -94,3 +94,10 @@ class Post:
         }
         return connectToMySQL(cls.DB).query_db(query, data)
     
+
+    @classmethod
+    def delete_post(cls, post_id):
+        connection = connectToMySQL(cls.DB)
+        query = "DELETE FROM posts WHERE id = %(post_id)s;"
+        data = {'post_id': post_id}
+        connection.query_db(query, data)

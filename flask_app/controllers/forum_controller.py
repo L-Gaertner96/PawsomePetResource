@@ -102,9 +102,9 @@ def edit_post(category, subcategory, post_id):
         post = Post.get_post_by_id(post_id)
         return render_template('edit_post.html', post=post, category=category, subcategory=subcategory)
 
-# @app.route('/<category>/<subcategory>/<int:post_id>/delete', methods=['POST'])
-# def delete_post(category, subcategory, post_id):
-#     Comment.delete_comments_by_post_id(post_id)
-#     Post.delete_post(post_id)
-#     flash("Post deleted successfully.", "success")
-#     return redirect(url_for('view_subcategory', category=category, subcategory=subcategory))
+@app.route('/<category>/<subcategory>/<int:post_id>/delete', methods=['POST'])
+def delete_post(category, subcategory, post_id):
+    Comment.delete_comments_by_post_id(post_id)
+    Post.delete_post(post_id)
+    flash("Post deleted successfully.", "success")
+    return redirect(url_for('view_subcategory', category=category, subcategory=subcategory))

@@ -22,7 +22,6 @@ def animal_pick(category):
     
 @app.route('/<category>/<subcategory>/', methods=['GET'])
 def view_subcategory(category, subcategory):
-    # Get category ID by category name
     category_obj = Category.get_category_by_name(category)
 
 
@@ -46,21 +45,27 @@ def view_subcategory(category, subcategory):
     
 @app.route('/<category>/<subcategory>/new_thread', methods=['GET'])
 def new_post_form(category, subcategory):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     return render_template('newpost.html', category=category, subcategory=subcategory)
 
 @app.route('/<category>/<subcategory>/create_post', methods=['POST'])
 def create_post(category, subcategory):
-    # Get the form data from the request
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     form_data = request.form
 
-    # Create a new post using the Post model
     Post.create_new_post(form_data, category, subcategory)
 
-    # Redirect to the post list page
     return redirect("/home")
 
 @app.route('/<category>/<subcategory>/<int:post_id>', methods=['GET'])
 def view_one(category, subcategory, post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     post = Post.get_post_by_id(post_id)
     if post:
         comments = Comment.get_comments_by_post_id(post_id)  # Fetch comments associated with the post
@@ -72,6 +77,9 @@ def view_one(category, subcategory, post_id):
     
 @app.route('/<category>/<subcategory>/<int:post>/new_comment', methods=['POST'])
 def create_comment(category, subcategory, post):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     content = request.form.get('content')
     user_id = session.get('user_id')
 
@@ -82,6 +90,9 @@ def create_comment(category, subcategory, post):
 
 @app.route('/<category>/<subcategory>/<int:post_id>/edit', methods=['GET', 'POST'])
 def edit_post(category, subcategory, post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     if request.method == 'POST':
         form_data = {
             'post_id': post_id,
@@ -97,6 +108,9 @@ def edit_post(category, subcategory, post_id):
 
 @app.route('/<category>/<subcategory>/<int:post_id>/delete', methods=['POST'])
 def delete_post(category, subcategory, post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect('/')
     Comment.delete_comments_by_post_id(post_id)
     Post.delete_post(post_id)
     flash("Post deleted successfully.", "success")

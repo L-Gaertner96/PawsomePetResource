@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, redirect
 from flask_app import connectToMySQL
 from flask_app.models.user_model import User
 from flask_app.models.subcat_model import Subcategory
@@ -16,7 +16,6 @@ class Post:
 
     @classmethod
     def create_new_post(cls, form_data, category, subcategory):
-        # Find the id of the desired subcategory
         query = """
             SELECT subcategories.id
             FROM subcategories
@@ -26,9 +25,7 @@ class Post:
         result = connectToMySQL(cls.DB).query_db(query, {'category': category, 'subcategory': subcategory})
         
         if result:
-            subcategory_id = result[0]['id']  # Access the first dictionary in the list and get the 'id' value
-
-            # Create a new dictionary with modified data
+            subcategory_id = result[0]['id'] 
             new_form_data = {
                 'users_id': session['user_id'],
                 'title': form_data['title'],
@@ -36,7 +33,6 @@ class Post:
                 'subcategories_id': subcategory_id
             }
 
-            # Insert the new post into the database
             query = """
                 INSERT INTO posts (title, body, users_id, subcategories_id)
                 VALUES (%(title)s, %(body)s, %(users_id)s, %(subcategories_id)s)

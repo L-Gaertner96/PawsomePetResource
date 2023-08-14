@@ -37,9 +37,10 @@ class Post:
                 INSERT INTO posts (title, body, users_id, subcategories_id)
                 VALUES (%(title)s, %(body)s, %(users_id)s, %(subcategories_id)s)
             """
-            connectToMySQL(cls.DB).query_db(query, new_form_data)
+            new_post_id = connectToMySQL(cls.DB).query_db(query, new_form_data)
+            return new_post_id  # Return the ID of the newly inserted post
         else:
-            return redirect("/home")
+            return None
         
     @classmethod
     def get_threads_by_subcategory(cls, subcategories_id):

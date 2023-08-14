@@ -4,7 +4,7 @@ from flask_app.models.user_model import User
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
-@app.route('/')
+@app.route('/login')
 def index():
     return render_template('index.html')
 
@@ -23,7 +23,7 @@ def signup():
     user_id=User.create_user(data)
     session['user_id']=user_id
     flash('Login success!')
-    return redirect('/home')
+    return redirect('/')
 
 @app.route('/login', methods = ['POST'])
 def login():
@@ -36,7 +36,7 @@ def login():
     
     session['username'] = user_info.username
     session['user_id'] = user_info.id
-    return redirect('/home')
+    return redirect('/')
 
 @app.route('/logout')
 def logout():

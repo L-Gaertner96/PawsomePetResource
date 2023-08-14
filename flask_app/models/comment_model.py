@@ -29,7 +29,12 @@ class Comment:
         db = cls.DB
         connection = connectToMySQL(db)
         
-        query = "SELECT * FROM comments WHERE posts_id = %(post_id)s;"
+        query = """
+            SELECT c.*, u.username
+            FROM comments c
+            JOIN users u ON c.users_id = u.id
+            WHERE c.posts_id = %(post_id)s;
+        """
         data = {'post_id': post_id}
         
         comments = connection.query_db(query, data)

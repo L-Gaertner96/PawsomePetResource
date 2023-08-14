@@ -5,7 +5,7 @@ from flask_app.models.post_model import Post
 from flask_app.models.subcat_model import Subcategory 
 from flask_app.models.comment_model import Comment
 
-@app.route('/home')
+@app.route('/')
 def homepage():
     return render_template('homepage.html')
 
@@ -28,14 +28,14 @@ def view_subcategory(category, subcategory):
         category_id = category_obj.id
     else:
         flash("Category not found.", "error")
-        return redirect("/home")
+        return redirect("/")
 
     subcategory_obj = Subcategory.get_subcat_by_name(category_id, subcategory)
     if subcategory_obj:
         subcategory_id = subcategory_obj.id
     else:
         flash("Subcategory not found.", "error")
-        return redirect("/home")
+        return redirect("/")
 
     threads = Post.get_threads_by_subcategory(subcategory_id)
     return render_template('threads.html', threads=threads, category=category_obj, subcategory=subcategory_obj)
@@ -45,14 +45,14 @@ def view_subcategory(category, subcategory):
 def new_post_form(category, subcategory):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     return render_template('newpost.html', category=category, subcategory=subcategory)
 
 @app.route('/<category>/<subcategory>/create_post', methods=['POST'])
 def create_post(category, subcategory):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     form_data = request.form
     validation_errors = Post.validate_new_post(form_data['title'], form_data['body'])
     if validation_errors:
@@ -60,16 +60,19 @@ def create_post(category, subcategory):
             flash(error, "error")
         return redirect(url_for('new_post_form', category=category, subcategory=subcategory))
 
-    Post.create_new_post(form_data, category, subcategory)
+    new_post_id = Post.create_new_post(form_data, category, subcategory)
+    print(new_post_id)
 
-    return redirect("/home")
+    return redirect(url_for('view_one', category=category, subcategory=subcategory, post_id=new_post_id))
+
+
 
     
 @app.route('/<category>/<subcategory>/<int:post_id>', methods=['GET'])
 def view_one(category, subcategory, post_id):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     post = Post.get_post_by_id(post_id)
     if post:
         comments = Comment.get_comments_by_post_id(post_id)
@@ -81,13 +84,13 @@ def view_one(category, subcategory, post_id):
         return render_template('viewthread.html', post=post, comments=comments, category=category, subcategory=subcategory, is_owner=is_owner)
     else:
         flash("Post not found.", "error")
-        return redirect("/home")
+        return redirect("/")
     
 @app.route('/<category>/<subcategory>/<int:post>/new_comment', methods=['POST'])
 def create_comment(category, subcategory, post):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     content = request.form.get('content')
     user_id = session.get('user_id')
 
@@ -100,7 +103,7 @@ def create_comment(category, subcategory, post):
 def edit_post(category, subcategory, post_id):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     if request.method == 'POST':
         form_data = {
             'post_id': post_id,
@@ -118,7 +121,7 @@ def edit_post(category, subcategory, post_id):
 def delete_post(category, subcategory, post_id):
     user_id = session.get('user_id')
     if not user_id:
-        return redirect('/')
+        return redirect('/login')
     Comment.delete_comments_by_post_id(post_id)
     Post.delete_post(post_id)
     flash("Post deleted successfully.", "success")

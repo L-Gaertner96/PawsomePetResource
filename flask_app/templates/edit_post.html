@@ -10,6 +10,45 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loginstyle.css') }}">
 </head>
 <body>
+    <nav class="navbar navbar-expand-xl navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Pawsome Pets</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWithDropdown" aria-controls="navbarWithDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse show" id="navbarWithDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">All Animals</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/dogs">Dogs</a></li>
+                            <li><a class="dropdown-item" href="/cats">Cats</a></li>
+                            <li><a class="dropdown-item" href="/birds">Birds</a></li>
+                            <li><a class="dropdown-item" href="/reptiles">Reptiles</a></li>
+                            <li><a class="dropdown-item" href="/rodents">Rodents</a></li>
+                            <li><a class="dropdown-item" href="/livestock">Livestock</a></li>
+                            <li><a class="dropdown-item" href="/exotics">Exotics</a></li>
+                        </ul>
+                    </li>
+                    {% if session.user_id %}
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, {{ session.username }}!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <div class="card">
             <div class="card-header"><h3>Edit Post</h3></div>

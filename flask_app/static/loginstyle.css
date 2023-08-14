@@ -31,3 +31,10 @@ body {
 .card-text-poster {
     margin-bottom: 0.5rem;
 }
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}

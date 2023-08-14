@@ -4,20 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Post</title>
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loginstyle.css') }}">
 </head>
 <body>
-    <h1>Edit Post</h1>
-    
-    <form method="post" action="{{ url_for('edit_post', category=category, subcategory=subcategory, post_id=post.id) }}">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{ post.title }}" required>
-        
-        <label for="body">Body:</label>
-        <textarea id="body" name="body" rows="5" cols="40" required>{{ post.body }}</textarea>
-        
-        <button type="submit">Update</button>
-    </form>
-    
-    <a href="{{ url_for('view_one', category=category, subcategory=subcategory, post_id=post.id) }}">Back to Post</a>
+    <div class="container">
+        <div class="card">
+            <div class="card-header"><h3>Edit Post</h3></div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('edit_post', category=category, subcategory=subcategory, post_id=post.id) }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Body:</label>
+                        <textarea class="form-control" id="body" name="body" rows="5" required>{{ post.body }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+                
+                {% with messages = get_flashed_messages(category_filter=['error']) %}
+                    {% if messages %}
+                        <div class="mt-3 alert alert-danger">
+                            <ul class="mb-0">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                <a href="{{ url_for('view_one', category=category, subcategory=subcategory, post_id=post.id) }}" class="btn btn-secondary mt-3">Back to Post</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -104,18 +104,27 @@ def edit_post(category, subcategory, post_id):
     user_id = session.get('user_id')
     if not user_id:
         return redirect('/login')
+    
     if request.method == 'POST':
         form_data = {
             'post_id': post_id,
             'title': request.form['title'],
             'body': request.form['body']
         }
+        
+        validation_errors = Post.validate_new_post(form_data['title'], form_data['body'])
+        if validation_errors:
+            for error in validation_errors:
+                flash(error, "error")
+            return redirect(url_for('edit_post', category=category, subcategory=subcategory, post_id=post_id))
+
         Post.update_post(form_data)
         flash("Post updated successfully.", "success")
         return redirect(url_for('view_one', category=category, subcategory=subcategory, post_id=post_id))
     else:
         post = Post.get_post_by_id(post_id)
         return render_template('edit_post.html', post=post, category=category, subcategory=subcategory)
+
 
 @app.route('/<category>/<subcategory>/<int:post_id>/delete', methods=['POST'])
 def delete_post(category, subcategory, post_id):

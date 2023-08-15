@@ -79,7 +79,7 @@ body, p, a {
 }
 
 .green-link:hover {
-    background-color: #6B8E23;
+    background-color: hsl(180, 92%, 64%);
     transition: background 0.3s ease-in-out; 
 }
 
